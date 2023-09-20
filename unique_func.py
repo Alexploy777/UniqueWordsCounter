@@ -42,4 +42,7 @@ class CounterUniqueWords:
                 self.unique_words.add(word)
                 self.label.setText('Счетчик уникальных слов: считаем')
 
+        l = len(self.unique_words)
+        print(l)
+        print(count)
         return len(self.unique_words)
