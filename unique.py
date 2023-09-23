@@ -30,6 +30,8 @@ class UniqueWords(QMainWindow, Ui_MainWindow, QFileDialog):
 
     def start(self):
         self.lcd_clear()
+        self.pushButton_clear.setDisabled(True)
+        self.pushButton_safe.setDisabled(True)
         file_path = \
             QFileDialog.getOpenFileName(self, "Выбери текстовый файл", "/home/",
                                         filter="текстовый файл (*.txt)")[0]
@@ -46,6 +48,7 @@ class UniqueWords(QMainWindow, Ui_MainWindow, QFileDialog):
             self.label.setText(f'Счетчик уникальных слов: посчитали за {round(time() - start_time, 2)} сек')
             self.progressBar.setValue(100)
             self.pushButton_safe.setEnabled(True)
+            self.pushButton_clear.setEnabled(True)
 
 
 if __name__ == '__main__':
