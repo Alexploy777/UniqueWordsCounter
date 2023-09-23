@@ -2,18 +2,17 @@ import math
 import os
 import re
 import pymorphy3
-import configparser
 
 
 class CounterUniqueWords:
     def __init__(self, main_window):
         self.morph = pymorphy3.MorphAnalyzer(path='pymorphy3_dicts_ru')
         self.main_window = main_window
-        self.config = configparser.ConfigParser()
-        self.config.read('config.ini', encoding="utf-8")
-        self.pattern_punctuation = re.compile(self.config.get('default', 'pattern_punctuation'))
-        self.pattern = re.compile(self.config.get('default', 'pattern'))
-        self.pattern_ru = re.compile(self.config.get('default', 'pattern_ru'))
+
+        self.pattern_punctuation = re.compile(r'[^\w\s\-]')
+        # self.pattern = re.compile(r'[а-яёa-z]+')
+        self.pattern = re.compile(r'\b[а-яa-zё_]*(?:-[а-яa-zё_]+[а-яa-zё_]*)*\b')
+
         self.progressBar = main_window.progressBar
         self.label = main_window.label
         self.unique_words = set()
@@ -35,13 +34,22 @@ class CounterUniqueWords:
         string_text = self.file_reader(file_path)
         string_text = self.pattern_punctuation.sub(' ', string_text)
         list_words = string_text.split()
+
         max_count = len(list_words)
+        filtered_word_list =[]
+        deleted_word_list = []
+
         for count, word in enumerate(list_words):
             self.progressBar.setValue(math.ceil(100 * count / max_count))
+
+            filtered_word = self.pattern.search(word)
             self.label.setText('Счетчик уникальных слов: фильтруем')
-            if (filtered_word := self.pattern.search(word)[0]) and len(filtered_word) >= min_symbols:
+            word = filtered_word[0] if filtered_word else ''
+            if word and len(word) >= min_symbols:
                 if flag_normal_form:
-                    filtered_word = self.morph.parse(filtered_word)[0].normal_form
+                    word = self.morph.parse(word)[0].normal_form
+                self.unique_words.add(word)
                 self.label.setText('Счетчик уникальных слов: считаем')
-                self.unique_words.add(filtered_word)
         return len(self.unique_words)
+
+
