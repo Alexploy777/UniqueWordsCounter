@@ -16,7 +16,9 @@ class CounterUniqueWords:
         self.pattern_ru = re.compile(self.config.get('default', 'pattern_ru'))
         self.progressBar = main_window.progressBar
         self.label = main_window.label
+        self.checkBox_rus = main_window.checkBox_rus
         self.unique_words = set()
+
 
     def file_reader(self, path):
         path = os.path.normpath(path)
@@ -31,6 +33,10 @@ class CounterUniqueWords:
                 f.write('\n'.join(self.unique_words))
 
     def different_words_func(self, file_path, flag_normal_form, min_symbols):
+        if self.checkBox_rus.isChecked():
+            pattern = self.pattern_ru
+        else:
+            pattern = self.pattern
         self.unique_words.clear()
         string_text = self.file_reader(file_path)
         string_text = self.pattern_punctuation.sub(' ', string_text)
@@ -39,7 +45,7 @@ class CounterUniqueWords:
         for count, word in enumerate(list_words):
             self.progressBar.setValue(math.ceil(100 * count / max_count))
             self.label.setText('Счетчик уникальных слов: фильтруем')
-            if (filtered_word := self.pattern.search(word)[0]) and len(filtered_word) >= min_symbols:
+            if (filtered_word := pattern.search(word)[0]) and len(filtered_word) >= min_symbols:
                 if flag_normal_form:
                     filtered_word = self.morph.parse(filtered_word)[0].normal_form
                 self.label.setText('Счетчик уникальных слов: считаем')
