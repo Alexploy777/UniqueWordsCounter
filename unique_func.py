@@ -19,7 +19,6 @@ class CounterUniqueWords:
         self.checkBox_rus = main_window.checkBox_rus
         self.unique_words = set()
 
-
     def file_reader(self, path):
         path = os.path.normpath(path)
         with open(path, 'r', encoding='utf-8') as f:
@@ -31,7 +30,6 @@ class CounterUniqueWords:
             path = os.path.normpath(path_for_safe)
             with open(path, 'w', encoding='utf-8') as f:
                 f.write('\n'.join(self.unique_words))
-
 
     def different_words_func(self, file_path, flag_normal_form, min_symbols):
         if self.checkBox_rus.isChecked():
