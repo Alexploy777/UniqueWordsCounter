@@ -65,9 +65,7 @@ class CounterUniqueWords:
         for count, word in enumerate(list_words):
             self.progressBar.setValue(math.ceil(100 * count / max_count))
             self.label.setText('Счетчик уникальных слов: фильтруем')
-
             filtered_word = pattern.search(word)[0] if pattern.search(word) else False
-
             if filtered_word and len(filtered_word) >= min_symbols:
                 if flag_normal_form:
                     filtered_word = self.morph.parse(filtered_word)[0].normal_form
