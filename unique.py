@@ -21,8 +21,8 @@ class UniqueWords(QMainWindow, Ui_MainWindow, QFileDialog):
 
     def lcd_clear(self):
         self.lcdNumber.display(0)
-        self.progressBar.setValue(0)
-        self.label.setText('Счетчик уникальных слов:')
+        # self.progressBar.setValue(0)
+        # self.label.setText('Счетчик уникальных слов:')
 
     def safe_dict(self):
         path_for_safe = QFileDialog.getSaveFileName(self, "Сохраняем словарь", filter="текстовый файл (*.txt)")[0]
@@ -34,7 +34,8 @@ class UniqueWords(QMainWindow, Ui_MainWindow, QFileDialog):
         if path:
             self.file_path = path
             self.label.setText(f'Файл: {self.file_path}')
-        self.pushButton_safe.setDisabled(True)
+            self.pushButton_safe.setDisabled(True)
+            self.lcd_clear()
 
     def start(self):
         self.lcd_clear()
