@@ -1,5 +1,7 @@
 import sys
 from time import time
+
+from PyQt5.QtCore import QThread
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QApplication
 from gui import Ui_MainWindow
@@ -16,7 +18,14 @@ class UniqueWords(QMainWindow, Ui_MainWindow, QFileDialog):
         self.pushButton.clicked.connect(self.open_file)
         self.pushButton_count.clicked.connect(self.start)
         self.pushButton_safe.clicked.connect(self.safe_dict)
+
         self.counter_obj = CounterUniqueWords(self)
+
+        # self.thread = QThread(self)
+        # self.counter_obj.moveToThread(self.thread)
+
+        # thread.started.connect(self.counter_obj.run)
+
         self.file_path = ''
 
     def lcd_clear(self):
@@ -48,9 +57,11 @@ class UniqueWords(QMainWindow, Ui_MainWindow, QFileDialog):
         min_symbols = self.spinBox.value()
         start_time = time()
         if self.file_path:
-            self.pushButton.setDisabled(True)
-            unique_words_num = self.counter_obj.different_words_func(self.file_path, flag_normal_form, min_symbols)
-            self.lcdNumber.display(unique_words_num)
+            self.pushButton.setDisabled(True)  # Делает не активной кнопку выбора файла
+            self.counter_obj.different_words_func(self.file_path, flag_normal_form, min_symbols)
+            # self.thread.start()
+
+
             self.label.setText(f'{self.file_path}: {round(time() - start_time, 2)} сек')
             self.progressBar.setValue(100)
             self.pushButton_safe.setEnabled(True)
