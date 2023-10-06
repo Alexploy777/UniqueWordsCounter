@@ -29,7 +29,6 @@ class UniqueWords(QMainWindow, Ui_MainWindow, QFileDialog):
         self.counter_obj.safe_unique_words(path_for_safe)
 
     def open_file(self):
-
         path = QFileDialog.getOpenFileName(self, "Выбери текстовый файл", "/home/", filter="текстовый файл (*.txt)")[0]
         if path:
             self.file_path = path
@@ -47,8 +46,6 @@ class UniqueWords(QMainWindow, Ui_MainWindow, QFileDialog):
         if self.file_path:
             self.pushButton.setDisabled(True)  # Делает не активной кнопку выбора файла
             self.counter_obj.different_words_func(self.file_path, flag_normal_form, min_symbols)
-
-
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

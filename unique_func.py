@@ -44,14 +44,12 @@ class DifferentWordsFunc(QThread):
                 self.label_signal.emit('Счетчик уникальных слов: считаем')
                 self.unique_words.add(filtered_word)
 
-        # noinspection PyUnresolvedReferences
         self.lcdNumber_signal.emit(len(self.unique_words))
         self.unique_words_signal.emit(self.unique_words)
         self.label_time_signal.emit(f'{self.mainwindow.file_path}: {round(time() - start_time, 2)} сек')
         self.progressBar_signal.emit(100)
         self.pushButton_enabled_signal.emit(True)
         self.pushButton_safe_enabled_signal.emit(True)
-
 
 class CounterUniqueWords:
     def __init__(self, main_window):
@@ -95,7 +93,6 @@ class CounterUniqueWords:
         self.file_path = file_path
         self.flag_normal_form = flag_normal_form
         self.min_symbols = min_symbols
-
         self.different_words_func_obj.start()
 
     def res_unique_words(self, result_set):
