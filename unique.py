@@ -1,9 +1,8 @@
 import sys
-from time import time
 
-from PyQt5.QtCore import QThread
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QApplication
+
 from gui import Ui_MainWindow
 from unique_func import CounterUniqueWords
 
@@ -20,18 +19,10 @@ class UniqueWords(QMainWindow, Ui_MainWindow, QFileDialog):
         self.pushButton_safe.clicked.connect(self.safe_dict)
 
         self.counter_obj = CounterUniqueWords(self)
-
-        # self.thread = QThread(self)
-        # self.counter_obj.moveToThread(self.thread)
-
-        # thread.started.connect(self.counter_obj.run)
-
         self.file_path = ''
 
     def lcd_clear(self):
         self.lcdNumber.display(0)
-        # self.progressBar.setValue(0)
-        # self.label.setText('Счетчик уникальных слов:')
 
     def safe_dict(self):
         path_for_safe = QFileDialog.getSaveFileName(self, "Сохраняем словарь", filter="текстовый файл (*.txt)")[0]
@@ -48,24 +39,15 @@ class UniqueWords(QMainWindow, Ui_MainWindow, QFileDialog):
 
     def start(self):
         self.lcd_clear()
-
-        self.pushButton_safe.setDisabled(True)
         if self.checkBox.isChecked():
             flag_normal_form = True
         else:
             flag_normal_form = False
         min_symbols = self.spinBox.value()
-        start_time = time()
         if self.file_path:
             self.pushButton.setDisabled(True)  # Делает не активной кнопку выбора файла
             self.counter_obj.different_words_func(self.file_path, flag_normal_form, min_symbols)
-            # self.thread.start()
 
-
-            self.label.setText(f'{self.file_path}: {round(time() - start_time, 2)} сек')
-            self.progressBar.setValue(100)
-            self.pushButton_safe.setEnabled(True)
-            self.pushButton.setEnabled(True)
 
 
 if __name__ == '__main__':
