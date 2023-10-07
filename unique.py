@@ -24,7 +24,7 @@ class UniqueWords(QMainWindow, Ui_MainWindow, QFileDialog):
         self.lcdNumber.display(0)
 
     def safe_dict(self):
-        file_name = f'{os.path.splitext(self.file_path)[0]}_unique'
+        file_name = f'{os.path.splitext(self.file_path)[0]}_unique' # формируем имя файла для сохранения
         path_for_safe = QFileDialog.getSaveFileName(self, "Сохраняем словарь", file_name, filter="текстовый файл (*.txt)")[0]
         self.counter_obj.safe_unique_words(path_for_safe)
 
