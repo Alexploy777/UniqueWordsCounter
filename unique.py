@@ -47,6 +47,7 @@ class UniqueWords(QMainWindow, Ui_MainWindow, QFileDialog):
             self.pushButton.setDisabled(True)  # Делает не активной кнопку выбора файла
             self.counter_obj.different_words_func(self.file_path, flag_normal_form, min_symbols)
 
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     w = UniqueWords()

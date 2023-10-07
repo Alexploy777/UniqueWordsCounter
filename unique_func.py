@@ -7,7 +7,6 @@ from time import time
 import pymorphy3
 from PyQt5.QtCore import QThread, pyqtSignal
 
-
 class DifferentWordsFunc(QThread):
     progressBar_signal = pyqtSignal(int)
     lcdNumber_signal = pyqtSignal(int)
@@ -17,8 +16,8 @@ class DifferentWordsFunc(QThread):
     pushButton_enabled_signal = pyqtSignal(bool)
     pushButton_safe_enabled_signal = pyqtSignal(bool)
 
-    def __init__(self, mainwindow, parent=None):
-        super(DifferentWordsFunc, self).__init__(parent)
+    def __init__(self, mainwindow):
+        super(DifferentWordsFunc, self).__init__()
         self.mainwindow = mainwindow
         self.unique_words = set()
         self.progressBar = self.mainwindow.progressBar
@@ -54,9 +53,9 @@ class DifferentWordsFunc(QThread):
 class CounterUniqueWords:
     def __init__(self, main_window):
         super().__init__()
-        self.morph = pymorphy3.MorphAnalyzer(path='pymorphy3_dicts_ru')
+        self.morph : pymorphy3 = pymorphy3.MorphAnalyzer(path='pymorphy3_dicts_ru')
         self.main_window = main_window
-        self.config = configparser.ConfigParser()
+        self.config: configparser = configparser.ConfigParser()
         self.config.read('config.ini', encoding="utf-8")
         self.pattern_punctuation = re.compile(self.config.get('default', 'pattern_punctuation'))
         self.pattern = re.compile(self.config.get('default', 'pattern'))
@@ -77,8 +76,8 @@ class CounterUniqueWords:
         self.different_words_func_obj.pushButton_enabled_signal.connect(self.pushButton.setEnabled)
         self.different_words_func_obj.pushButton_safe_enabled_signal.connect(self.pushButton_safe.setEnabled)
 
-    def file_reader(self, path):
-        path = os.path.normpath(path)
+    def file_reader(self, path: str) -> str:
+        path : str = os.path.normpath(path)
         with open(path, 'r', encoding='utf-8') as f:
             self.label.setText('Счетчик уникальных слов: читаем файл..')
             return f.read().lower()
