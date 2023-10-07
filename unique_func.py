@@ -7,6 +7,7 @@ from time import time
 import pymorphy3
 from PyQt5.QtCore import QThread, pyqtSignal
 
+
 class DifferentWordsFunc(QThread):
     progressBar_signal = pyqtSignal(int)
     lcdNumber_signal = pyqtSignal(int)

@@ -1,8 +1,6 @@
 import sys
-
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QApplication
-
 from gui import Ui_MainWindow
 from unique_func import CounterUniqueWords
 
