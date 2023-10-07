@@ -1,3 +1,4 @@
+import os.path
 import sys
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QApplication
@@ -23,7 +24,8 @@ class UniqueWords(QMainWindow, Ui_MainWindow, QFileDialog):
         self.lcdNumber.display(0)
 
     def safe_dict(self):
-        path_for_safe = QFileDialog.getSaveFileName(self, "Сохраняем словарь", filter="текстовый файл (*.txt)")[0]
+        file_name = f'{os.path.splitext(self.file_path)[0]}_unique'
+        path_for_safe = QFileDialog.getSaveFileName(self, "Сохраняем словарь", file_name, filter="текстовый файл (*.txt)")[0]
         self.counter_obj.safe_unique_words(path_for_safe)
 
     def open_file(self):
@@ -43,6 +45,7 @@ class UniqueWords(QMainWindow, Ui_MainWindow, QFileDialog):
         min_symbols = self.spinBox.value()
         if self.file_path:
             self.pushButton.setDisabled(True)  # Делает не активной кнопку выбора файла
+            self.pushButton_count.setDisabled(True)  # Делает не активной кнопку выбора файла
             self.counter_obj.different_words_func(self.file_path, flag_normal_form, min_symbols)
 
 

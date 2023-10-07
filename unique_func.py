@@ -3,6 +3,7 @@ import math
 import os
 import re
 from time import time
+from dataclasses import dataclass
 
 import pymorphy3
 from PyQt5.QtCore import QThread, pyqtSignal
@@ -14,8 +15,7 @@ class DifferentWordsFunc(QThread):
     label_signal = pyqtSignal(str)
     unique_words_signal = pyqtSignal(set)
     label_time_signal = pyqtSignal(str)
-    pushButton_enabled_signal = pyqtSignal(bool)
-    pushButton_safe_enabled_signal = pyqtSignal(bool)
+    pushButton_signal = pyqtSignal(bool)
 
     def __init__(self, mainwindow):
         super(DifferentWordsFunc, self).__init__()
@@ -48,12 +48,11 @@ class DifferentWordsFunc(QThread):
         self.unique_words_signal.emit(self.unique_words)
         self.label_time_signal.emit(f'{self.mainwindow.file_path}: {round(time() - start_time, 2)} сек')
         self.progressBar_signal.emit(100)
-        self.pushButton_enabled_signal.emit(True)
-        self.pushButton_safe_enabled_signal.emit(True)
+        self.pushButton_signal.emit(True)
 
 class CounterUniqueWords:
     def __init__(self, main_window):
-        super().__init__()
+        # super().__init__()
         self.morph : pymorphy3 = pymorphy3.MorphAnalyzer(path='pymorphy3_dicts_ru')
         self.main_window = main_window
         self.config: configparser = configparser.ConfigParser()
@@ -67,6 +66,7 @@ class CounterUniqueWords:
         self.lcdNumber = main_window.lcdNumber
         self.pushButton = main_window.pushButton
         self.pushButton_safe = main_window.pushButton_safe
+        self.pushButton_count = main_window.pushButton_count
         self.unique_words = set()
         self.different_words_func_obj = DifferentWordsFunc(mainwindow=self)
         self.different_words_func_obj.progressBar_signal.connect(self.progressBar.setValue)
@@ -74,8 +74,9 @@ class CounterUniqueWords:
         self.different_words_func_obj.label_signal.connect(self.label.setText)
         self.different_words_func_obj.unique_words_signal.connect(self.res_unique_words)
         self.different_words_func_obj.label_time_signal.connect(self.label.setText)
-        self.different_words_func_obj.pushButton_enabled_signal.connect(self.pushButton.setEnabled)
-        self.different_words_func_obj.pushButton_safe_enabled_signal.connect(self.pushButton_safe.setEnabled)
+        self.different_words_func_obj.pushButton_signal.connect(self.pushButton.setEnabled)
+        self.different_words_func_obj.pushButton_signal.connect(self.pushButton_safe.setEnabled)
+        self.different_words_func_obj.pushButton_signal.connect(self.pushButton_count.setEnabled)
 
     def file_reader(self, path: str) -> str:
         path : str = os.path.normpath(path)
