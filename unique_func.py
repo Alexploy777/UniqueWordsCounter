@@ -3,7 +3,6 @@ import math
 import os
 import re
 from time import time
-from dataclasses import dataclass
 
 import pymorphy3
 from PyQt5.QtCore import QThread, pyqtSignal
