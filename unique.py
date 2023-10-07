@@ -45,7 +45,7 @@ class UniqueWords(QMainWindow, Ui_MainWindow, QFileDialog):
         min_symbols = self.spinBox.value()
         if self.file_path:
             self.pushButton.setDisabled(True)  # Делает не активной кнопку выбора файла
-            self.pushButton_count.setDisabled(True)  # Делает не активной кнопку выбора файла
+            self.pushButton_count.setDisabled(True)  # Делает не активной кнопку сохранения файла
             self.counter_obj.different_words_func(self.file_path, flag_normal_form, min_symbols)
 
 
