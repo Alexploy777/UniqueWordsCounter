@@ -95,12 +95,6 @@ class CounterUniqueWords:
         self.file_path = file_path
         self.flag_normal_form = flag_normal_form
         self.min_symbols = min_symbols
-        #
-        #
-        # self.thread = QThread()
-        # self.different_words_func_obj.moveToThread(self.thread)
-        # self.thread.started.connect(self.different_words_func_obj.run)
-        # self.thread.start()
         self.different_words_func_obj.start()
 
     def res_unique_words(self, result_set):
