@@ -5,10 +5,11 @@ import re
 from time import time
 
 import pymorphy3
-from PyQt5.QtCore import QThread, pyqtSignal
+from PyQt5.QtCore import QThread, pyqtSignal, QObject
 
 
-class DifferentWordsFunc(QThread):
+
+class DifferentWordsFunc(QObject):
     progressBar_signal = pyqtSignal(int)
     lcdNumber_signal = pyqtSignal(int)
     label_signal = pyqtSignal(str)
@@ -17,12 +18,11 @@ class DifferentWordsFunc(QThread):
     pushButton_signal = pyqtSignal(bool)
 
     def __init__(self, mainwindow):
-        super(DifferentWordsFunc, self).__init__()
+        super().__init__()
         self.mainwindow = mainwindow
         self.unique_words = set()
-        self.progressBar = self.mainwindow.progressBar
 
-    def run(self):
+    def counter_unique_words(self):
         start_time = time()
         if self.mainwindow.checkBox_rus.isChecked():
             pattern = self.mainwindow.pattern_ru
@@ -51,7 +51,6 @@ class DifferentWordsFunc(QThread):
 
 class CounterUniqueWords:
     def __init__(self, main_window):
-        # super().__init__()
         self.morph : pymorphy3 = pymorphy3.MorphAnalyzer(path='pymorphy3_dicts_ru')
         self.main_window = main_window
         self.config: configparser = configparser.ConfigParser()
@@ -67,7 +66,15 @@ class CounterUniqueWords:
         self.pushButton_safe = main_window.pushButton_safe
         self.pushButton_count = main_window.pushButton_count
         self.unique_words = set()
-        self.different_words_func_obj = DifferentWordsFunc(mainwindow=self)
+
+
+        self.different_words_func_obj = DifferentWordsFunc(self)
+        self.thread = QThread()
+        self.different_words_func_obj.moveToThread(self.thread)
+        self.thread.started.connect(self.different_words_func_obj.counter_unique_words)
+
+
+
         self.different_words_func_obj.progressBar_signal.connect(self.progressBar.setValue)
         self.different_words_func_obj.lcdNumber_signal.connect(self.lcdNumber.display)
         self.different_words_func_obj.label_signal.connect(self.label.setText)
@@ -76,6 +83,12 @@ class CounterUniqueWords:
         self.different_words_func_obj.pushButton_signal.connect(self.pushButton.setEnabled)
         self.different_words_func_obj.pushButton_signal.connect(self.pushButton_safe.setEnabled)
         self.different_words_func_obj.pushButton_signal.connect(self.pushButton_count.setEnabled)
+        self.different_words_func_obj.pushButton_signal.connect(self.stop_work)
+
+    def stop_work(self):
+        self.thread.quit()
+        self.thread.wait(1000)
+        self.thread.terminate()
 
     def file_reader(self, path: str) -> str:
         path : str = os.path.normpath(path)
@@ -93,7 +106,10 @@ class CounterUniqueWords:
         self.file_path = file_path
         self.flag_normal_form = flag_normal_form
         self.min_symbols = min_symbols
-        self.different_words_func_obj.start()
+
+        # self.different_words_func_obj.start()
+        self.thread.start()
 
     def res_unique_words(self, result_set):
         self.unique_words = result_set
+        # self.thread.quit()
