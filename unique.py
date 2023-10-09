@@ -22,6 +22,7 @@ class UniqueWords(QMainWindow, Ui_MainWindow, QFileDialog):
 
     def lcd_clear(self):
         self.lcdNumber.display(0)
+        self.progressBar.setValue(0)
 
     def safe_dict(self):
         file_name = f'{os.path.splitext(self.file_path)[0]}_unique' # формируем имя файла для сохранения
@@ -46,6 +47,7 @@ class UniqueWords(QMainWindow, Ui_MainWindow, QFileDialog):
         if self.file_path:
             self.pushButton.setDisabled(True)  # Делает не активной кнопку выбора файла
             self.pushButton_count.setDisabled(True)  # Делает не активной кнопку сохранения файла
+            self.pushButton_safe.setDisabled(True)
             self.counter_obj.different_words_func(self.file_path, flag_normal_form, min_symbols)
 
 
