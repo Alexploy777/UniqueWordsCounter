@@ -9,7 +9,7 @@ from PyQt5.QtCore import QThread, pyqtSignal, QObject
 
 
 
-class DifferentWordsFunc(QThread):
+class DifferentWordsFunc(QObject):
     progressBar_signal = pyqtSignal(int)
     lcdNumber_signal = pyqtSignal(int)
     label_signal = pyqtSignal(str)
@@ -22,7 +22,7 @@ class DifferentWordsFunc(QThread):
         self.mainwindow = mainwindow
         self.unique_words = set()
 
-    def run(self):
+    def counter_unique_words(self):
         start_time = time()
         if self.mainwindow.checkBox_rus.isChecked():
             pattern = self.mainwindow.pattern_ru
@@ -69,6 +69,11 @@ class CounterUniqueWords:
 
 
         self.different_words_func_obj = DifferentWordsFunc(self)
+        self.thread = QThread()
+        self.different_words_func_obj.moveToThread(self.thread)
+        self.thread.started.connect(self.different_words_func_obj.counter_unique_words)
+
+
 
         self.different_words_func_obj.progressBar_signal.connect(self.progressBar.setValue)
         self.different_words_func_obj.lcdNumber_signal.connect(self.lcdNumber.display)
@@ -78,6 +83,12 @@ class CounterUniqueWords:
         self.different_words_func_obj.pushButton_signal.connect(self.pushButton.setEnabled)
         self.different_words_func_obj.pushButton_signal.connect(self.pushButton_safe.setEnabled)
         self.different_words_func_obj.pushButton_signal.connect(self.pushButton_count.setEnabled)
+        self.different_words_func_obj.pushButton_signal.connect(self.stop_work)
+
+    def stop_work(self):
+        self.thread.quit()
+        self.thread.wait(1000)
+        self.thread.terminate()
 
     def file_reader(self, path: str) -> str:
         path : str = os.path.normpath(path)
@@ -95,7 +106,10 @@ class CounterUniqueWords:
         self.file_path = file_path
         self.flag_normal_form = flag_normal_form
         self.min_symbols = min_symbols
-        self.different_words_func_obj.start()
+
+        # self.different_words_func_obj.start()
+        self.thread.start()
 
     def res_unique_words(self, result_set):
         self.unique_words = result_set
+        # self.thread.quit()
