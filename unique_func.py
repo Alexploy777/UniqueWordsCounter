@@ -106,10 +106,8 @@ class CounterUniqueWords:
         self.file_path = file_path
         self.flag_normal_form = flag_normal_form
         self.min_symbols = min_symbols
-
-        # self.different_words_func_obj.start()
         self.thread.start()
 
     def res_unique_words(self, result_set):
         self.unique_words = result_set
-        # self.thread.quit()
+
